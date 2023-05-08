@@ -10,6 +10,9 @@ import Carbon
 
 extension NSAppleScript {
 
+	/// Creates a script from the contents of a file.
+	/// - Parameter url: The URL of an AppleScript
+	/// - Returns: An `NSAppleScript` compiled from the contents of the file. 
 	public static func script(contentsOf url: URL) throws -> NSAppleScript {
 		var error: NSDictionary?
 
