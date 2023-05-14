@@ -59,10 +59,7 @@ extension NSAppleScript {
 		// Add positional arguments
 		// Modified from https://gist.github.com/chbeer/3666e4b7b2e71eb47b15eaae63d4192f
 
-		let parameters = NSAppleEventDescriptor(listDescriptor: ())
-		args.forEach { descriptor in
-			parameters.insert(descriptor, at: 0)
-		}
+		let parameters = NSAppleEventDescriptor(list: args)
 
 		var psn = ProcessSerialNumber(highLongOfPSN: UInt32(0), lowLongOfPSN: UInt32(kCurrentProcess))
 		let target = NSAppleEventDescriptor(descriptorType: DescType(typeProcessSerialNumber), bytes:&psn, length:MemoryLayout<ProcessSerialNumber>.size)
@@ -120,7 +117,7 @@ extension NSAppleScript {
 	///   - args: The arguments to pass to the handler.
 	/// - Returns: The result of the handler.
 	public func execute(scriptHandler: String, args: [AppleEventDescriptorRepresentable] = []) throws {
-		try execute(scriptHandler: scriptHandler, args: args.map { $0.descriptor })
+		try execute(scriptHandler: scriptHandler, args: args.map(\.descriptor))
 	}
 
 	/// Execute the specified handler in the specified AppleScript.
@@ -130,7 +127,7 @@ extension NSAppleScript {
 	///   - args: The arguments to pass to the handler.
 	/// - Returns: The result of the handler.
 	public func execute(scriptHandler: String, args: AppleEventDescriptorRepresentable...) throws {
-		try execute(scriptHandler: scriptHandler, args: args.map { $0.descriptor })
+		try execute(scriptHandler: scriptHandler, args: args.map(\.descriptor))
 	}
 
 	/// Execute the specified handler in the specified AppleScript.
@@ -140,7 +137,7 @@ extension NSAppleScript {
 	///   - args: The arguments to pass to the handler.
 	/// - Returns: The result of the handler.
 	public func execute<D: AppleEventDescriptorRepresentable>(scriptHandler: String, args: [AppleEventDescriptorRepresentable] = []) throws -> D? {
-		D.init(from: try execute(scriptHandler: scriptHandler, args: args.map { $0.descriptor }))
+		D.init(from: try execute(scriptHandler: scriptHandler, args: args.map(\.descriptor)))
 	}
 
 
@@ -151,7 +148,7 @@ extension NSAppleScript {
 	///   - args: The arguments to pass to the handler.
 	/// - Returns: The result of the handler.
 	public func execute<D: AppleEventDescriptorRepresentable>(scriptHandler: String, args: AppleEventDescriptorRepresentable...) throws -> D? {
-		D.init(from: try execute(scriptHandler: scriptHandler, args: args.map { $0.descriptor }))
+		D.init(from: try execute(scriptHandler: scriptHandler, args: args.map(\.descriptor)))
 	}
 
 	/// Execute the specified handler in the specified AppleScript.
@@ -161,7 +158,7 @@ extension NSAppleScript {
 	///   - args: The arguments to pass to the handler.
 	/// - Returns: The result of the handler.
 	public func executeThrowingOnNil<D: AppleEventDescriptorRepresentable>(scriptHandler: String, args: [AppleEventDescriptorRepresentable] = []) throws -> D {
-		guard let value = D.init(from: try execute(scriptHandler: scriptHandler, args: args.map { $0.descriptor })) else {
+		guard let value = D.init(from: try execute(scriptHandler: scriptHandler, args: args.map(\.descriptor))) else {
 			throw ResultError.resultWasNil(method: scriptHandler)
 		}
 		return value
@@ -174,7 +171,7 @@ extension NSAppleScript {
 	///   - args: The arguments to pass to the handler.
 	/// - Returns: The result of the handler.
 	public func executeThrowingOnNil<D: AppleEventDescriptorRepresentable>(scriptHandler: String, args: AppleEventDescriptorRepresentable...) throws -> D {
-		guard let value = D.init(from: try execute(scriptHandler: scriptHandler, args: args.map { $0.descriptor })) else {
+		guard let value = D.init(from: try execute(scriptHandler: scriptHandler, args: args.map(\.descriptor))) else {
 			throw ResultError.resultWasNil(method: scriptHandler)
 		}
 		return value
