@@ -73,6 +73,6 @@ let result: String = try script.execute(scriptHandler: "greet", args: "Emory")
 There's also a special case where where a script returning `nil` is invalid and instead throws:
 
 ```swift
-let result: Int = try script.execute(scriptHandler: "getRating")
+let result: Int = try script.executeThrowingOnNil(scriptHandler: "getRating")
 // 5
 ```
