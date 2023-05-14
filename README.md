@@ -35,7 +35,7 @@ There are several initializers on `NSAppleEventDescriptor` which reduce boilerpl
 
 Both init and execute have options which will throw instead of requiring a dictionary be passed in:
 
-```
+```swift
 let scriptURL = URL(fileURLWithPath: "/path/to/yourscript.applescript")
 let script = try NSAppleScript(contentsOf: scriptURL)
 
@@ -46,7 +46,7 @@ let result = try script.execute()
 
 Calling handlers (methods) in an AppleScript is usually full of boilerplate requiring creating a whole host of other events and descriptors. This has been simplified to a single method:
 
-```
+```swift
 let result = try script.execute(scriptHandler: "greet", args: [NSAppleEventDescriptor(string: "Emory")])
 // <NSAppleEventDescriptor: 'utxt'("Hello Emory")>
 ```
@@ -55,14 +55,14 @@ let result = try script.execute(scriptHandler: "greet", args: [NSAppleEventDescr
 
 However, passing in `NSAppleEventDescriptor` is still inconvenient. With `AppleEventDescriptorRepresentable` we can get Swift types out directly:
 
-```
+```swift
 let result: String = try script.execute()
 // Hello, World!
 ```
 
 We can also call handlers while passing in Swift types:
 
-```
+```swift
 try script.execute(scriptHandler: "setRating", args: 5)
 // Handler doesn't return a value
 
@@ -72,7 +72,7 @@ let result: String = try script.execute(scriptHandler: "greet", args: "Emory")
 
 There's also a special case where where a script returning `nil` is invalid and instead throws:
 
-```
+```swift
 let result: Int = try script.execute(scriptHandler: "getRating")
 // 5
 ```
