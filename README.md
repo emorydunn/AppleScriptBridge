@@ -1,10 +1,10 @@
 # AppleScriptBridge
 
-A collection of helpers for dealing with AppleEvents in Swift. This package focuses on bridging `NSAppleEventDescriptor` with Swift types for easier automation of scriptable applications. 
+A collection of helpers for dealing with AppleEvents in Swift. This package focuses on bridging `NSAppleEventDescriptor` with Swift types for easier automation of scriptable applications.
 
 ## AppleEventDescriptorRepresentable
 
-A core protocol of the library is `AppleEventDescriptorRepresentable`, which encapsulates converting between Swift types and AppleEvent descriptors. The is similar to `RawRepresentable`, allowing initialization from a descriptor and providing a descriptor. 
+A core protocol of the library is `AppleEventDescriptorRepresentable`, which encapsulates converting between Swift types and AppleEvent descriptors. The is similar to `RawRepresentable`, allowing initialization from a descriptor and providing a descriptor.
 
 Default implementations are provided for many primitive types that are available from a descriptor:
 
@@ -15,7 +15,7 @@ Default implementations are provided for many primitive types that are available
 - File URL
 - Int
 
-Conditional conformance is also added for types whose elements are descriptors: 
+Conditional conformance is also added for types whose elements are descriptors:
 
 - Arrays
 - Optionals
@@ -23,15 +23,13 @@ Conditional conformance is also added for types whose elements are descriptors:
 
 ## NSAppleEventDescriptor
 
-There are several initializers on `NSAppleEventDescriptor` which reduce boilerplate, mostly dealing with constructing lists. 
+There are several initializers on `NSAppleEventDescriptor` which reduce boilerplate, mostly dealing with constructing lists.
 
 `NSAppleEventDescriptor.init(listDescriptor:)` handles initializing a list descriptor and adding each item in the array.
 
-`NSAppleEventDescriptor.missingValue()` is also added in addition to `.null()`.  
-
+`NSAppleEventDescriptor.missingValue()` is also added in addition to `.null()`.
 
 ## NSAppleScript
- 
 
 ### Throwing Methods
 
@@ -66,7 +64,7 @@ We can also call handlers while passing in Swift types:
 
 ```
 try script.execute(scriptHandler: "setRating", args: 5)
-// Handler doesn't return a value 
+// Handler doesn't return a value
 
 let result: String = try script.execute(scriptHandler: "greet", args: "Emory")
 // Hello Emory
@@ -75,6 +73,6 @@ let result: String = try script.execute(scriptHandler: "greet", args: "Emory")
 There's also a special case where where a script returning `nil` is invalid and instead throws:
 
 ```
-let result: String = try script.execute(scriptHandler: "getRating")
+let result: Int = try script.execute(scriptHandler: "getRating")
 // 5
 ```
