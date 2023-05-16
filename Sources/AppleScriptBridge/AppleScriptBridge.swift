@@ -10,13 +10,13 @@ import Foundation
 import Carbon
 
 public class AppleScriptBridge {
-	public static func checkPermissions(for application: String) {
+	public static func checkPermissions(for application: String, askUserIfNeeded: Bool) {
 		if #available(OSX 10.14, *) {
 			NSLog("Checking AppleEvents permission")
 			let descriptor = NSAppleEventDescriptor(string: application)
 
 			let status = AEDeterminePermissionToAutomateTarget(
-				descriptor.aeDesc!, typeWildCard, typeWildCard, true
+				descriptor.aeDesc!, typeWildCard, typeWildCard, askUserIfNeeded
 			)
 
 			NSLog("\(status)")
