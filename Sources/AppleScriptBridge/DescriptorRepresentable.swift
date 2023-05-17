@@ -77,7 +77,11 @@ extension Int: AppleEventDescriptorRepresentable {
 		NSAppleEventDescriptor(int32: Int32(self))
 	}
 
+	/// Instantiate an integer from a descriptor.
+	/// - Parameter descriptor: The descriptor.
+	/// - Note: This will return a value of `0` even in the case when the event does not actually contain an integer value.
 	public init?(from descriptor: NSAppleEventDescriptor) {
+		// - TODO: Look into checking the type to ensure only valid ints return a value
 		self = Int(descriptor.int32Value)
 	}
 }
