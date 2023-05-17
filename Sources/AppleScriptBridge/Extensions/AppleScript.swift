@@ -23,6 +23,7 @@ extension NSAppleScript {
 		return script
 	}
 
+
 	@discardableResult
 	/// Execute the specified AppleScript.
 	/// - Parameter script: The script to execute.
@@ -54,8 +55,6 @@ extension NSAppleScript {
 	///   - args: The arguments to pass to the handler.
 	/// - Returns: The result of the handler.
 	public func execute(scriptHandler: String, args: [NSAppleEventDescriptor]) throws -> NSAppleEventDescriptor {
-		var error: NSDictionary?
-
 		// Add positional arguments
 		// Modified from https://gist.github.com/chbeer/3666e4b7b2e71eb47b15eaae63d4192f
 
@@ -75,19 +74,7 @@ extension NSAppleScript {
 		event.setParam(parameters, forKeyword: AEKeyword(keyDirectObject))
 
 		// Run the script
-		let result = executeAppleEvent(event, error: &error)
-
-		if let error = error {
-			throw ScriptError.couldNotExecute(
-				method: scriptHandler,
-				args: args,
-				script: source ?? "Script has no source code available",
-				error: error[NSAppleScript.errorMessage] as? String ?? "No error message provided",
-				number: error[NSAppleScript.errorNumber] as? Int
-			)
-		}
-
-		return result
+		return try execute()
 	}
 
 	// MARK: - ExpressibleByAppleEventDescriptor
@@ -101,7 +88,7 @@ extension NSAppleScript {
 	/// Execute the specified AppleScript.
 	/// - Parameter script: The script to execute.
 	/// - Returns: The result of the script.
-	public func execute<D: AppleEventDescriptorRepresentable>() throws -> D {
+	public func executeThrowingOnNil<D: AppleEventDescriptorRepresentable>() throws -> D {
 		guard let value = D.init(from: try execute()) else {
 			throw ResultError.resultWasNil(method: "")
 		}
