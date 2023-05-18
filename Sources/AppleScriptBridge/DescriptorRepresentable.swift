@@ -97,20 +97,25 @@ extension Int: AppleEventDescriptorRepresentable {
 
 extension Array: AppleEventDescriptorRepresentable where Element: AppleEventDescriptorRepresentable {
 	public var descriptor: NSAppleEventDescriptor {
-		let desc = NSAppleEventDescriptor.list()
-		self.forEach { desc.insert($0.descriptor, at: 0) }
-		return desc
+		NSAppleEventDescriptor(list: descriptors)
 	}
 
 	public init?(from descriptor: NSAppleEventDescriptor) {
-		self = (0...descriptor.numberOfItems).compactMap { index in
-			guard let item = descriptor.atIndex(index) else { return nil }
-			return Element(from: item)
-		}
+
+		guard descriptor.eventDescriptorType == .list else { return nil }
+
+		self.init(descriptorOrEmpty: descriptor)
+
 	}
 
 	public init(descriptorOrEmpty descriptor: NSAppleEventDescriptor) {
-		self = (0...descriptor.numberOfItems).compactMap { index in
+
+		guard descriptor.numberOfItems > 0 else {
+			self = []
+			return
+		}
+
+		self = (1...descriptor.numberOfItems).compactMap { index in
 			guard let item = descriptor.atIndex(index) else { return nil }
 			return Element(from: item)
 		}
