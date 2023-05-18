@@ -13,19 +13,15 @@ struct DescriptorProxy<Key: CodingKey> {
 	/// All `CodingKeys` available in the record.
 	let allKeys: [Key]
 
-	/// <#Description#>
+	/// A dictionary containing record keys mapped to values
 	let keyMapping: [String: NSAppleEventDescriptor]
 
-	init(_ descriptor: NSAppleEventDescriptor) throws {
-		guard let record = wrapper.descriptor.forKeyword(usrf) else {
-			let context = DecodingError.Context(codingPath: codingPath, debugDescription: "AppleEvent does not contain a top-level `usfr` keyword.")
-			throw DecodingError.dataCorrupted(context)
-		}
+	init(_ descriptor: NSAppleEventDescriptor) {
 
 		// Reduce the keys into a `[KeyName: ValueIndex]`
-		self.keyMapping = stride(from: 1, through: record.numberOfItems, by: 2).reduce(into: [String: NSAppleEventDescriptor]()) { partialResult, index in
-			let key = record.atIndex(index)!
-			let value = record.atIndex(index + 1)
+		self.keyMapping = stride(from: 1, through: descriptor.numberOfItems, by: 2).reduce(into: [String: NSAppleEventDescriptor]()) { partialResult, index in
+			let key = descriptor.atIndex(index)!
+			let value = descriptor.atIndex(index + 1)
 			partialResult[key.stringValue!] = value
 		}
 
@@ -56,7 +52,12 @@ class KeyedDecoding<Key>: KeyedDecodingContainerProtocol where Key: CodingKey {
 		self.wrapper = wrapper
 		self.codingPath = codingPath
 
-		self.recordProxy = try DescriptorProxy<Key>(wrapper.descriptor)
+		guard let record = wrapper.descriptor.forKeyword(usrf) else {
+			let context = DecodingError.Context(codingPath: codingPath, debugDescription: "AppleEvent does not contain a top-level `usfr` keyword.")
+			throw DecodingError.dataCorrupted(context)
+		}
+
+		self.recordProxy = DescriptorProxy<Key>(record)
 
 	}
 
