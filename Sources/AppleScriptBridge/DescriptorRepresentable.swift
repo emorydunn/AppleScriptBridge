@@ -136,7 +136,11 @@ extension Optional: AppleEventDescriptorRepresentable where Wrapped: AppleEventD
 	}
 
 	public init?(from descriptor: NSAppleEventDescriptor) {
-		self = Wrapped.init(from: descriptor)
+		if let value = Wrapped.init(from: descriptor) {
+			self = .some(value)
+		} else {
+			return nil
+		}
 	}
 }
 
