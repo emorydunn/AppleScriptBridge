@@ -8,8 +8,6 @@
 import XCTest
 @testable import AppleScriptBridge
 
-
-
 final class EncoderTests: XCTestCase {
 
 	func testEncodeValue() throws {
@@ -36,6 +34,16 @@ final class EncoderTests: XCTestCase {
 		let encoder = DescriptorEncoding()
 
 		let value = [2, 4, 8]
+
+		try value.encode(to: encoder)
+
+		print(encoder.wrapper.descriptor)
+	}
+
+	func testEncodeDict() throws {
+		let encoder = DescriptorEncoding()
+
+		let value = ["greeting": "Hello", "name": "Emory"]
 
 		try value.encode(to: encoder)
 
