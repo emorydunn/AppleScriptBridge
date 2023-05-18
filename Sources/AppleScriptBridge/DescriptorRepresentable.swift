@@ -33,6 +33,10 @@ extension Date: AppleEventDescriptorRepresentable {
 	}
 
 	public init?(from descriptor: NSAppleEventDescriptor) {
+
+		// Handle default reference date
+		guard descriptor.eventDescriptorType == .date else { return nil }
+
 		guard let value = descriptor.dateValue else {
 			return nil
 		}
