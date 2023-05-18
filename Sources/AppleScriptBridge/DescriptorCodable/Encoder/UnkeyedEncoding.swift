@@ -22,20 +22,6 @@ class DescriptorUnkeyedEncoding: UnkeyedEncodingContainer {
 		self.wrapper = wrapper
 	}
 
-	private struct IndexedCodingKey: CodingKey {
-		let intValue: Int?
-		let stringValue: String
-
-		init?(intValue: Int) {
-			self.intValue = intValue
-			self.stringValue = intValue.description
-		}
-
-		init?(stringValue: String) {
-			return nil
-		}
-	}
-
 	func insertValue(_ value: NSAppleEventDescriptor) {
 		wrapper.descriptor.insert(value, at: count)
 		count += 1
@@ -49,7 +35,7 @@ class DescriptorUnkeyedEncoding: UnkeyedEncodingContainer {
 	func encode<T>(_ value: T) throws where T : Encodable {
 		// Create a new encoder for the value
 		let encoder = DescriptorEncoding()
-		encoder.codingPath = codingPath + [IndexedCodingKey(intValue: count)!]
+		encoder.codingPath = codingPath + [IndexedCodingKey(count)]
 
 		// Encode the value
 		try value.encode(to: encoder)
