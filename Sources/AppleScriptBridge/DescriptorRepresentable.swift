@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Carbon
 
 public protocol AppleEventDescriptorRepresentable {
 	var descriptor: NSAppleEventDescriptor { get }
@@ -45,6 +46,10 @@ extension Bool: AppleEventDescriptorRepresentable {
 	}
 
 	public init?(from descriptor: NSAppleEventDescriptor) {
+
+		// Handle default `false`
+		guard descriptor.eventDescriptorType == .boolean else { return nil }
+
 		self = descriptor.booleanValue
 	}
 }
@@ -55,6 +60,8 @@ extension Double: AppleEventDescriptorRepresentable {
 	}
 
 	public init?(from descriptor: NSAppleEventDescriptor) {
+		// Handle default `0.0`
+		guard descriptor.eventDescriptorType == .double else { return nil }
 		self = descriptor.doubleValue
 	}
 }
@@ -81,7 +88,9 @@ extension Int: AppleEventDescriptorRepresentable {
 	/// - Parameter descriptor: The descriptor.
 	/// - Note: This will return a value of `0` even in the case when the event does not actually contain an integer value.
 	public init?(from descriptor: NSAppleEventDescriptor) {
-		// - TODO: Look into checking the type to ensure only valid ints return a value
+		// Handle default `0`
+		guard descriptor.eventDescriptorType == .int32 else { return nil }
+
 		self = Int(descriptor.int32Value)
 	}
 }
