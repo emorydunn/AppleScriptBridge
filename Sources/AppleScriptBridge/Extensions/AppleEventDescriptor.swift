@@ -30,6 +30,13 @@ extension NSAppleEventDescriptor {
 		}
 	}
 
+	/// Creates a descriptor initialized with Apple event type `typeSInt32` that stores the specified integer value.
+	///
+	/// The integer is converted to a 32-bit integer.
+	public convenience init(int: Int) {
+		self.init(int32: Int32(int))
+	}
+
 	/// Initializes a newly allocated instance as a list descriptor with the specified files.
 	/// - Parameter fileList: Files to add to the list
 	public convenience init(fileList list: [URL]) {
