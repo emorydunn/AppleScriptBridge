@@ -20,8 +20,17 @@ final class DecoderTests: XCTestCase {
 		XCTAssertEqual(42, value)
 	}
 
-	func testDecodeNil() throws {
+	func testDecodeNull() throws {
 		let descriptor = NSAppleEventDescriptor.null()
+		let decoder = DescriptorDecoding(descriptor: descriptor)
+
+		let value: Int? = try Optional<Int>(from: decoder)
+
+		XCTAssertNil(value)
+	}
+
+	func testDecodeMissingValue() throws {
+		let descriptor = NSAppleEventDescriptor.missingValue()
 		let decoder = DescriptorDecoding(descriptor: descriptor)
 
 		let value: Int? = try Optional<Int>(from: decoder)
