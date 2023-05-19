@@ -24,8 +24,6 @@ class DescriptorEncoding: Encoder {
 	}
 
 	func container<Key>(keyedBy type: Key.Type) -> KeyedEncodingContainer<Key> where Key : CodingKey {
-		print("Creating keyed container")
-
 		let container = DescriptorKeyedEncoding<Key>(wrapper, nilEncoding: nilEncoding)
 		container.codingPath = codingPath
 		return KeyedEncodingContainer(container)
