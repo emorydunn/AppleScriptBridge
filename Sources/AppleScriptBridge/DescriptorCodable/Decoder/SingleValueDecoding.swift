@@ -20,7 +20,7 @@ struct SingleValueDecoding: SingleValueDecodingContainer {
 	}
 
 	func decodeNil() -> Bool {
-		wrapper.descriptor == NSAppleEventDescriptor.null()
+		wrapper.descriptor.isNil
 	}
 
 	func decode<T>(_ type: T.Type) throws -> T where T : Decodable {

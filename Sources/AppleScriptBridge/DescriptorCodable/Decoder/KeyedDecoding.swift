@@ -78,7 +78,7 @@ class KeyedDecoding<Key>: KeyedDecodingContainerProtocol where Key: CodingKey {
 	}
 
 	func decodeNil(forKey key: Key) throws -> Bool {
-		try decodeDescriptor(wrapper.descriptor, forKey: key) == .null()
+		try decodeDescriptor(wrapper.descriptor, forKey: key).isNil
 	}
 
 

@@ -47,4 +47,11 @@ extension NSAppleEventDescriptor {
 	public convenience init(stringList list: [String]) {
 		self.init(list: list.map { NSAppleEventDescriptor(string: $0) })
 	}
+
+	/// Returns a boolean indicating whether the descriptor should be considered `nil`.
+	///
+	/// - Returns: `true` if the descriptor is either `.null()` or `.missingValue()`, `false` otherwise.
+	public var isNil: Bool {
+		self == .null() || self == .missingValue()
+	}
 }

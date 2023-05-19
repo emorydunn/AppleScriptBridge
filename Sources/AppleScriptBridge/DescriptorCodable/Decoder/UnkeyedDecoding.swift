@@ -37,7 +37,7 @@ class UnkeyedDecoding: UnkeyedDecodingContainer {
 	}
 
 	func decodeNil() throws -> Bool {
-		try decodeDescriptor() == NSAppleEventDescriptor.null()
+		try decodeDescriptor().isNil
 	}
 
 	func decode<T>(_ type: T.Type) throws -> T where T: AppleEventDescriptorRepresentable, T: Decodable {
