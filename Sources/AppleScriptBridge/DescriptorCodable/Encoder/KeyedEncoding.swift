@@ -15,12 +15,15 @@ class DescriptorKeyedEncoding<Key>: KeyedEncodingContainerProtocol where Key: Co
 
 	var wrapper: DescriptorWrapper
 
-	init(_ wrapper: DescriptorWrapper) {
+	var nilEncoding: DescriptorEncoder.NilEncodingStrategy
+
+	init(_ wrapper: DescriptorWrapper, nilEncoding: DescriptorEncoder.NilEncodingStrategy) {
 		// Replace the encoder's wrapper with a record descriptor and container
 		wrapper.descriptor = NSAppleEventDescriptor(recordDescriptor: ())
 		wrapper.descriptor.setDescriptor(NSAppleEventDescriptor(listDescriptor: ()), forKeyword: usrf)
 
 		self.wrapper = wrapper
+		self.nilEncoding = nilEncoding
 	}
 
 	func encodeDescriptor(_ descriptor: NSAppleEventDescriptor, forKey key: Key) {
@@ -40,12 +43,12 @@ class DescriptorKeyedEncoding<Key>: KeyedEncodingContainerProtocol where Key: Co
 
 	func encodeNil(forKey key: Key) throws {
 		// Add the null to the record
-		encodeDescriptor(.null(), forKey: key)
+		encodeDescriptor(nilEncoding.descriptor, forKey: key)
 	}
 
 	func encode<T>(_ value: T, forKey key: Key) throws where T : Encodable {
 		// Create a new encoder for the value
-		let encoder = DescriptorEncoding()
+		let encoder = DescriptorEncoding(nilEncoding: nilEncoding)
 		encoder.codingPath.append(key)
 
 		// Encode the value

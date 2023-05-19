@@ -14,28 +14,31 @@ class DescriptorEncoding: Encoder {
 
 	var wrapper: DescriptorWrapper
 
-	init(descriptor: DescriptorWrapper = DescriptorWrapper()) {
+	var nilEncoding: DescriptorEncoder.NilEncodingStrategy
+
+	init(descriptor: DescriptorWrapper = DescriptorWrapper(), nilEncoding: DescriptorEncoder.NilEncodingStrategy) {
 		codingPath = []
 		userInfo = [:]
 		self.wrapper = descriptor
+		self.nilEncoding = nilEncoding
 	}
 
 	func container<Key>(keyedBy type: Key.Type) -> KeyedEncodingContainer<Key> where Key : CodingKey {
 		print("Creating keyed container")
 
-		let container = DescriptorKeyedEncoding<Key>(wrapper)
+		let container = DescriptorKeyedEncoding<Key>(wrapper, nilEncoding: nilEncoding)
 		container.codingPath = codingPath
 		return KeyedEncodingContainer(container)
 	}
 
 	func unkeyedContainer() -> UnkeyedEncodingContainer {
-		let container = DescriptorUnkeyedEncoding(wrapper)
+		let container = DescriptorUnkeyedEncoding(wrapper, nilEncoding: nilEncoding)
 		container.codingPath = codingPath
 		return container
 	}
 
 	func singleValueContainer() -> SingleValueEncodingContainer {
-		let container = DescriptorSingleValueEncoding(wrapper)
+		let container = DescriptorSingleValueEncoding(wrapper, nilEncoding: nilEncoding)
 		container.codingPath = codingPath
 		return container
 	}

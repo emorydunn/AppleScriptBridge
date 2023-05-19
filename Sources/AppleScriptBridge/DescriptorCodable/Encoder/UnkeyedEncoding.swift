@@ -15,11 +15,14 @@ class DescriptorUnkeyedEncoding: UnkeyedEncodingContainer {
 
 	var wrapper: DescriptorWrapper
 
-	init(_ wrapper: DescriptorWrapper) {
+	var nilEncoding: DescriptorEncoder.NilEncodingStrategy
+
+	init(_ wrapper: DescriptorWrapper, nilEncoding: DescriptorEncoder.NilEncodingStrategy) {
 		// Replace the encoder's wrapper with a list descriptor
 		wrapper.descriptor = NSAppleEventDescriptor(listDescriptor: ())
 
 		self.wrapper = wrapper
+		self.nilEncoding = nilEncoding
 	}
 
 	func insertValue(_ value: NSAppleEventDescriptor) {
@@ -29,12 +32,12 @@ class DescriptorUnkeyedEncoding: UnkeyedEncodingContainer {
 
 	func encodeNil() throws {
 		// Add null to the list
-		insertValue(.null())
+		insertValue(nilEncoding.descriptor)
 	}
 
 	func encode<T>(_ value: T) throws where T : Encodable {
 		// Create a new encoder for the value
-		let encoder = DescriptorEncoding()
+		let encoder = DescriptorEncoding(nilEncoding: nilEncoding)
 		encoder.codingPath = codingPath + [IndexedCodingKey(count)]
 
 		// Encode the value
