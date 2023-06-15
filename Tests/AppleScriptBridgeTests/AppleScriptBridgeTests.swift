@@ -24,10 +24,10 @@ final class AppleScriptBridgeTests: XCTestCase {
 
 	}
 
-	func testCallHander() {
+	func testCallHander() throws {
 		let source = """
 		on runTest()
-		return 42
+			return 42
 		end runTest
 		"""
 
@@ -36,7 +36,9 @@ final class AppleScriptBridgeTests: XCTestCase {
 			return
 		}
 
-		XCTAssertNoThrow(try script.execute(scriptHandler: "runTest", args: [.null()]))
+		let result: Int? = try script.execute(scriptHandler: "runTest")
+
+		XCTAssertEqual(result, 42)
 
 	}
 

@@ -74,7 +74,20 @@ extension NSAppleScript {
 		event.setParam(parameters, forKeyword: AEKeyword(keyDirectObject))
 
 		// Run the script
-		return try execute()
+		var error: NSDictionary?
+		let result = executeAppleEvent(event, error: &error)
+
+		if let error = error {
+			throw ScriptError.couldNotExecute(
+				method: scriptHandler,
+				args: args,
+				script: source ?? "Script has no source code available",
+				error: error[NSAppleScript.errorMessage] as? String ?? "No error message provided",
+				number: error[NSAppleScript.errorNumber] as? Int
+			)
+		}
+
+		return result
 	}
 
 	// MARK: - ExpressibleByAppleEventDescriptor
