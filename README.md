@@ -56,7 +56,7 @@ let result = try script.execute(scriptHandler: "greet", args: [NSAppleEventDescr
 However, passing in `NSAppleEventDescriptor` is still inconvenient. With `AppleEventDescriptorRepresentable` we can get Swift types out directly:
 
 ```swift
-let result: String = try script.execute()
+let result: String? = try script.execute()
 // Hello, World!
 ```
 
@@ -66,7 +66,7 @@ We can also call handlers while passing in Swift types:
 try script.execute(scriptHandler: "setRating", args: 5)
 // Handler doesn't return a value
 
-let result: String = try script.execute(scriptHandler: "greet", args: "Emory")
+let result: String? = try script.execute(scriptHandler: "greet", args: "Emory")
 // Hello Emory
 ```
 
