@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  AppleScript.swift
 //  
 //
 //  Created by Emory Dunn on 3/25/23.
@@ -26,7 +26,6 @@ extension NSAppleScript {
 
 	@discardableResult
 	/// Execute the specified AppleScript.
-	/// - Parameter script: The script to execute.
 	/// - Returns: The result of the script.
 	public func execute() throws -> NSAppleEventDescriptor {
 		var error: NSDictionary?
@@ -50,7 +49,6 @@ extension NSAppleScript {
 	@discardableResult
 	/// Execute the specified handler in the specified AppleScript.
 	/// - Parameters:
-	///   - url: The AppleScript.
 	///   - scriptHandler: The AppleScript handler to execute.
 	///   - args: The arguments to pass to the handler.
 	/// - Returns: The result of the handler.
@@ -92,14 +90,12 @@ extension NSAppleScript {
 
 	// MARK: - ExpressibleByAppleEventDescriptor
 	/// Execute the specified AppleScript.
-	/// - Parameter script: The script to execute.
 	/// - Returns: The result of the script.
 	public func execute<D: AppleEventDescriptorRepresentable>() throws -> D? {
 		D.init(from: try execute())
 	}
 
 	/// Execute the specified AppleScript.
-	/// - Parameter script: The script to execute.
 	/// - Returns: The result of the script.
 	public func executeThrowingOnNil<D: AppleEventDescriptorRepresentable>() throws -> D {
 		guard let value = D.init(from: try execute()) else {
@@ -112,7 +108,6 @@ extension NSAppleScript {
 
 	/// Execute the specified handler in the specified AppleScript.
 	/// - Parameters:
-	///   - url: The AppleScript.
 	///   - scriptHandler: The AppleScript handler to execute.
 	///   - args: The arguments to pass to the handler.
 	/// - Returns: The result of the handler.
@@ -122,17 +117,15 @@ extension NSAppleScript {
 
 	/// Execute the specified handler in the specified AppleScript.
 	/// - Parameters:
-	///   - url: The AppleScript.
 	///   - scriptHandler: The AppleScript handler to execute.
 	///   - args: The arguments to pass to the handler.
 	/// - Returns: The result of the handler.
-	public func execute(scriptHandler: String, args: AppleEventDescriptorRepresentable...) throws {
+	public func execute(scriptHandler: String, _ args: AppleEventDescriptorRepresentable...) throws {
 		try execute(scriptHandler: scriptHandler, args: args.map(\.descriptor))
 	}
 
 	/// Execute the specified handler in the specified AppleScript.
 	/// - Parameters:
-	///   - url: The AppleScript.
 	///   - scriptHandler: The AppleScript handler to execute.
 	///   - args: The arguments to pass to the handler.
 	/// - Returns: The result of the handler.
@@ -143,17 +136,15 @@ extension NSAppleScript {
 
 	/// Execute the specified handler in the specified AppleScript.
 	/// - Parameters:
-	///   - url: The AppleScript.
 	///   - scriptHandler: The AppleScript handler to execute.
 	///   - args: The arguments to pass to the handler.
 	/// - Returns: The result of the handler.
-	public func execute<D: AppleEventDescriptorRepresentable>(scriptHandler: String, args: AppleEventDescriptorRepresentable...) throws -> D? {
+	public func execute<D: AppleEventDescriptorRepresentable>(scriptHandler: String, _ args: AppleEventDescriptorRepresentable...) throws -> D? {
 		D.init(from: try execute(scriptHandler: scriptHandler, args: args.map(\.descriptor)))
 	}
 
 	/// Execute the specified handler in the specified AppleScript.
 	/// - Parameters:
-	///   - url: The AppleScript.
 	///   - scriptHandler: The AppleScript handler to execute.
 	///   - args: The arguments to pass to the handler.
 	/// - Returns: The result of the handler.
@@ -166,11 +157,10 @@ extension NSAppleScript {
 
 	/// Execute the specified handler in the specified AppleScript.
 	/// - Parameters:
-	///   - url: The AppleScript.
 	///   - scriptHandler: The AppleScript handler to execute.
 	///   - args: The arguments to pass to the handler.
 	/// - Returns: The result of the handler.
-	public func executeThrowingOnNil<D: AppleEventDescriptorRepresentable>(scriptHandler: String, args: AppleEventDescriptorRepresentable...) throws -> D {
+	public func executeThrowingOnNil<D: AppleEventDescriptorRepresentable>(scriptHandler: String, _ args: AppleEventDescriptorRepresentable...) throws -> D {
 		guard let value = D.init(from: try execute(scriptHandler: scriptHandler, args: args.map(\.descriptor))) else {
 			throw ResultError.resultWasNil(method: scriptHandler)
 		}
