@@ -6,7 +6,7 @@ A collection of helpers for dealing with AppleEvents in Swift. This package focu
 
 A core protocol of the library is `AppleEventDescriptorRepresentable`, which encapsulates converting between Swift types and AppleEvent descriptors. The is similar to `RawRepresentable`, allowing initialization from a descriptor and providing a descriptor.
 
-Default implementations are provided for many primitive types that are available from a descriptor:
+Default implementations are provided for many value types that are available from a descriptor:
 
 - String
 - Date
@@ -75,4 +75,28 @@ There's also a special case where where a script returning `nil` is invalid and 
 ```swift
 let result: Int = try script.executeThrowingOnNil(scriptHandler: "getRating")
 // 5
+```
+
+## Codable
+
+While `AppleEventDescriptorRepresentable` is useful for converting simple types, it's still difficult to convert records into Swift types. This is where `Codable` support comes in. Structs and the most obvious, but even dictionaries require special handling and are best suited for `DescriptorEncoder` & `DescriptorDecoder`.
+
+```swift
+let encoder = DescriptorEncoder()
+
+let descriptor = try encoder.encode(["greeting": "Hello", "name": "Emory"])
+// <NSAppleEventDescriptor: { 'usrf':[ 'utxt'("greeting"), 'utxt'("Hello"), 'utxt'("name"), 'utxt'("Emory") ] }>
+```
+
+```swift
+struct Record: Codable {
+    let greeting: String
+    let name: String
+}
+
+let deocder = DescriptorDecoder()
+let greetingResult = try script.execute(scriptHandler: "greet": args: ["Hello", "Emory"])
+
+let greeting = try decoder.decode(Record.self, from: greetingResult)
+// Record(greeting: "Hello", name: "Emory")
 ```
