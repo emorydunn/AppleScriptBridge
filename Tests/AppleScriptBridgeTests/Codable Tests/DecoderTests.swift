@@ -71,9 +71,9 @@ final class DecoderTests: XCTestCase {
 
 	func testStruct() throws {
 
-		struct Record: Codable {
-			var greeting = "Hello"
-			var name = "Emory"
+		struct Record: Codable, Equatable {
+			var greeting: String
+			var name: String
 		}
 
 		let record = NSAppleEventDescriptor(list: [NSAppleEventDescriptor(string: "greeting"),
@@ -90,7 +90,7 @@ final class DecoderTests: XCTestCase {
 
 		let value = try Record(from: decoder)
 
-		print(value)
+		XCTAssertEqual(value, Record(greeting: "Hello", name: "Emory"))
 
 
 	}
