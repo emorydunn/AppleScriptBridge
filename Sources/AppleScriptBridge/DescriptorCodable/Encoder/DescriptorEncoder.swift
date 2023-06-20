@@ -7,12 +7,18 @@
 
 import Foundation
 
+/// An object that encodes instances of a data type as Apple Event Descriptors.
 public class DescriptorEncoder {
+
+	/// Creates a new, reusable Apple Event Descriptor encoder with the default formatting settings and encoding strategies.
 	public init() { }
 
 	/// A value that determines how to encode `nil` in the AppleEvent Descriptor.
 	public var nilEncoding: NilEncodingStrategy = .null
 
+	/// Returns an Apple Event Descriptor representation of the value you supply.
+	/// - Parameter value: The value to encode as an Apple Event Descriptor.
+	/// - Returns: The Apple Event Descriptor.
 	public func encode<T: Encodable>(_ value: T) throws -> NSAppleEventDescriptor {
 		let encoder = DescriptorEncoding(nilEncoding: nilEncoding)
 
