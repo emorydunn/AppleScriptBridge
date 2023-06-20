@@ -9,6 +9,7 @@
 import Foundation
 import Carbon
 
+@available(*, deprecated, message: "Use NSAppleScript extensions.")
 public class AppleScriptBridge {
 	public static func checkPermissions(for application: String, askUserIfNeeded: Bool) {
 		if #available(OSX 10.14, *) {
