@@ -36,7 +36,7 @@ public enum DescriptorType: UInt32, CustomStringConvertible {
 	case double = 1685026146
 	case fileURL = 1718973036 // typeFileURL
 	case processIdentifier = 1802529124
-	case missingValue = 1954115685
+	case missingValue = 1954115685 // TODO: This is a different value than `NSAppleEventDescriptor.missingValue()`
 
 	case unknown = 0
 

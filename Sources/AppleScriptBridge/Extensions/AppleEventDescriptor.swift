@@ -15,7 +15,7 @@ extension NSAppleEventDescriptor {
 	///
 	/// - Returns: A descriptor with `missing value`.
 	public static func missingValue() -> NSAppleEventDescriptor {
-		return NSAppleEventDescriptor(typeCode: 1836281447)
+		return NSAppleEventDescriptor(typeCode: 1836281447) // TODO: This is a different value than `DescriptorType.missingValue`
 	}
 
 	/// Initializes a newly allocated instance as a list descriptor with the specified descriptors.
