@@ -8,18 +8,25 @@
 import Foundation
 import Carbon
 
+/// A type that can be converted to and from an associated Apple Event Descriptor.
 public protocol AppleEventDescriptorRepresentable {
 	var descriptor: NSAppleEventDescriptor { get }
 
 	init?(from descriptor: NSAppleEventDescriptor)
 }
 
-extension String: AppleEventDescriptorRepresentable {
+extension String: AppleEventDescriptorType {
+
+	public static var descriptorType: DescriptorType = .string
+
 	public var descriptor: NSAppleEventDescriptor {
 		NSAppleEventDescriptor(string: self)
 	}
 
 	public init?(from descriptor: NSAppleEventDescriptor) {
+
+		guard Self.descriptorMatchesType(descriptor) else { return nil }
+
 		guard let value = descriptor.stringValue else {
 			return nil
 		}
@@ -27,7 +34,10 @@ extension String: AppleEventDescriptorRepresentable {
 	}
 }
 
-extension Date: AppleEventDescriptorRepresentable {
+extension Date: AppleEventDescriptorType {
+
+	public static var descriptorType: DescriptorType = .date
+
 	public var descriptor: NSAppleEventDescriptor {
 		NSAppleEventDescriptor(date: self)
 	}
@@ -35,7 +45,7 @@ extension Date: AppleEventDescriptorRepresentable {
 	public init?(from descriptor: NSAppleEventDescriptor) {
 
 		// Handle default reference date
-		guard descriptor.eventDescriptorType == .date else { return nil }
+		guard Self.descriptorMatchesType(descriptor) else { return nil }
 
 		guard let value = descriptor.dateValue else {
 			return nil
@@ -44,38 +54,51 @@ extension Date: AppleEventDescriptorRepresentable {
 	}
 }
 
-extension Bool: AppleEventDescriptorRepresentable {
+extension Bool: AppleEventDescriptorType {
+
+	public static var descriptorType: DescriptorType = .boolean
+
 	public var descriptor: NSAppleEventDescriptor {
 		NSAppleEventDescriptor(boolean: self)
 	}
 
 	public init?(from descriptor: NSAppleEventDescriptor) {
-
 		// Handle default `false`
-		guard descriptor.eventDescriptorType == .boolean else { return nil }
+		guard Self.descriptorMatchesType(descriptor) else { return nil }
 
 		self = descriptor.booleanValue
 	}
 }
 
-extension Double: AppleEventDescriptorRepresentable {
+extension Double: AppleEventDescriptorType {
+
+	public static var descriptorType: DescriptorType = .double
+
+
 	public var descriptor: NSAppleEventDescriptor {
 		NSAppleEventDescriptor(double: self)
 	}
 
 	public init?(from descriptor: NSAppleEventDescriptor) {
 		// Handle default `0.0`
-		guard descriptor.eventDescriptorType == .double else { return nil }
+		guard Self.descriptorMatchesType(descriptor) else { return nil }
+
 		self = descriptor.doubleValue
 	}
 }
 
-extension URL: AppleEventDescriptorRepresentable {
+extension URL: AppleEventDescriptorType {
+
+	public static var descriptorType: DescriptorType = .fileURL
+
 	public var descriptor: NSAppleEventDescriptor {
 		NSAppleEventDescriptor(fileURL: self)
 	}
 
 	public init?(from descriptor: NSAppleEventDescriptor) {
+
+		guard Self.descriptorMatchesType(descriptor) else { return nil }
+
 		guard let value = descriptor.fileURLValue else {
 			return nil
 		}
@@ -83,7 +106,10 @@ extension URL: AppleEventDescriptorRepresentable {
 	}
 }
 
-extension Int: AppleEventDescriptorRepresentable {
+extension Int: AppleEventDescriptorType {
+
+	public static var descriptorType: DescriptorType = .int32
+
 	public var descriptor: NSAppleEventDescriptor {
 		NSAppleEventDescriptor(int32: Int32(self))
 	}
@@ -93,7 +119,7 @@ extension Int: AppleEventDescriptorRepresentable {
 	/// - Note: This will return a value of `0` even in the case when the event does not actually contain an integer value.
 	public init?(from descriptor: NSAppleEventDescriptor) {
 		// Handle default `0`
-		guard descriptor.eventDescriptorType == .int32 else { return nil }
+		guard Self.descriptorMatchesType(descriptor) else { return nil }
 
 		self = Int(descriptor.int32Value)
 	}

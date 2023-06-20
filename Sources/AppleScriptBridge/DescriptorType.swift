@@ -7,6 +7,21 @@
 
 import Foundation
 
+/// A protocol that indicates the conforming type directly maps to an Apple Event descriptor type.
+public protocol AppleEventDescriptorType: AppleEventDescriptorRepresentable {
+	static var descriptorType: DescriptorType { get }
+}
+
+extension AppleEventDescriptorType {
+	/// Check whether the type specified Descriptor is the same as the receiver.
+	/// - Parameter descriptor: The Descriptor to test.
+	/// - Returns: A boolean indicating whether the types match.
+	static func descriptorMatchesType(_ descriptor: NSAppleEventDescriptor) -> Bool {
+		descriptor.eventDescriptorType == Self.descriptorType
+	}
+}
+
+/// Apple Event Descriptor Type Constants.
 public enum DescriptorType: UInt32, CustomStringConvertible {
 	case int32 = 1819242087 // typeSInt32
 	case string = 1970567284
@@ -25,6 +40,8 @@ public enum DescriptorType: UInt32, CustomStringConvertible {
 
 	case unknown = 0
 
+	/// Initialize a value from a type code. 
+	/// - Parameter typeCode: The four-character code that identifies the event data type.
 	init(_ typeCode: DescType) {
 		if let type = DescriptorType(rawValue: typeCode) {
 			self = type
@@ -33,6 +50,7 @@ public enum DescriptorType: UInt32, CustomStringConvertible {
 		}
 	}
 
+	/// The description of the type.
 	public var description: String {
 		switch self {
 		case .int32: return "int32"
@@ -56,6 +74,7 @@ public enum DescriptorType: UInt32, CustomStringConvertible {
 }
 
 public extension NSAppleEventDescriptor {
+	/// The type constant of the Descriptor.
 	var eventDescriptorType: DescriptorType {
 		DescriptorType(descriptorType)
 	}
