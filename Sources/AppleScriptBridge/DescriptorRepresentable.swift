@@ -97,12 +97,16 @@ extension URL: AppleEventDescriptorType {
 
 	public init?(from descriptor: NSAppleEventDescriptor) {
 
-		guard Self.descriptorMatchesType(descriptor) else { return nil }
-
-		guard let value = descriptor.fileURLValue else {
+		// Attempt to decode as a fileURL
+		if Self.descriptorMatchesType(descriptor),
+			let value = descriptor.fileURLValue {
+			self = value
+		} else if let value = descriptor.stringValue {
+			// Attempt to decode from a string path
+			self = URL(fileURLWithPath: value)
+		} else {
 			return nil
 		}
-		self = value
 	}
 }
 
