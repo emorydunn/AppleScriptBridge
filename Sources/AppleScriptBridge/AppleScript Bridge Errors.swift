@@ -61,7 +61,16 @@ public enum ScriptError: LocalizedError, CustomStringConvertible {
 public enum ResultError: LocalizedError, CustomStringConvertible {
 	
 	case resultWasNil(method: String)
-	case unexpectedType(method: String, expected: String)
+	case unexpectedType(method: String, expected: DescriptorType, received: NSAppleEventDescriptor)
+
+	public var errorDescription: String? {
+		switch self {
+		case .resultWasNil(let method):
+			"AppleScript Handler '\(method)' returned nil"
+		case .unexpectedType(let method, let expected, let received):
+			"AppleScript Handler '\(method)' expected '\(expected)' but returned '\(received)'"
+		}
+	}
 
 	public var description: String {
    """
