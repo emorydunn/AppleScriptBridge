@@ -149,9 +149,13 @@ extension NSAppleScript {
 	///   - args: The arguments to pass to the handler.
 	/// - Returns: The result of the handler.
 	public func executeThrowingOnNil<D: AppleEventDescriptorRepresentable>(scriptHandler: String, args: [AppleEventDescriptorRepresentable] = []) throws -> D {
-		guard let value = D.init(from: try execute(scriptHandler: scriptHandler, args: args.map(\.descriptor))) else {
-			throw ResultError.resultWasNil(method: scriptHandler)
+
+		let returnEvent = try execute(scriptHandler: scriptHandler, args: args.map(\.descriptor))
+
+		guard let value = D.init(from: returnEvent) else {
+			throw ResultError.unexpectedType(method: scriptHandler, expected: D.descriptorType, received: returnEvent)
 		}
+		
 		return value
 	}
 
@@ -161,10 +165,7 @@ extension NSAppleScript {
 	///   - args: The arguments to pass to the handler.
 	/// - Returns: The result of the handler.
 	public func executeThrowingOnNil<D: AppleEventDescriptorRepresentable>(scriptHandler: String, _ args: AppleEventDescriptorRepresentable...) throws -> D {
-		guard let value = D.init(from: try execute(scriptHandler: scriptHandler, args: args.map(\.descriptor))) else {
-			throw ResultError.resultWasNil(method: scriptHandler)
-		}
-		return value
+		return try executeThrowingOnNil(scriptHandler: scriptHandler, args: args)
 	}
 
 }
