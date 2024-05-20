@@ -10,6 +10,9 @@ import Carbon
 
 /// A type that can be converted to and from an associated Apple Event Descriptor.
 public protocol AppleEventDescriptorRepresentable {
+
+	static var descriptorType: DescriptorType { get }
+
 	var descriptor: NSAppleEventDescriptor { get }
 
 	init?(from descriptor: NSAppleEventDescriptor)
@@ -130,6 +133,9 @@ extension Int: AppleEventDescriptorType {
 }
 
 extension Array: AppleEventDescriptorRepresentable where Element: AppleEventDescriptorRepresentable {
+
+	public static var descriptorType: DescriptorType { .list }
+
 	public var descriptor: NSAppleEventDescriptor {
 		NSAppleEventDescriptor(list: descriptors)
 	}
@@ -160,7 +166,24 @@ extension Array: AppleEventDescriptorRepresentable where Element: AppleEventDesc
 	}
 }
 
+extension Data: AppleEventDescriptorRepresentable {
+
+	public static var descriptorType: DescriptorType { .unknown }
+
+	public init?(from descriptor: NSAppleEventDescriptor) {
+		self = descriptor.data
+	}
+
+	public var descriptor: NSAppleEventDescriptor {
+		fatalError("This method is not implemented")
+	}
+}
+
+
 extension Optional: AppleEventDescriptorRepresentable where Wrapped: AppleEventDescriptorRepresentable {
+
+	public static var descriptorType: DescriptorType { Wrapped.descriptorType }
+
 	public var descriptor: NSAppleEventDescriptor {
 		guard let value = self else {
 			return NSAppleEventDescriptor.missingValue()
@@ -179,6 +202,9 @@ extension Optional: AppleEventDescriptorRepresentable where Wrapped: AppleEventD
 }
 
 extension RawRepresentable where RawValue: AppleEventDescriptorRepresentable {
+
+	public static var descriptorType: DescriptorType { RawValue.descriptorType }
+
 	public var descriptor: NSAppleEventDescriptor {
 		rawValue.descriptor
 	}
