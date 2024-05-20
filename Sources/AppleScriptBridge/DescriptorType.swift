@@ -29,6 +29,8 @@ public enum DescriptorType: UInt32, CustomStringConvertible {
 	case list = 1818850164 // typeAEList
 	case record = 1919247215 // typeAERecord
 	case boolean = 1651470188 // typeBoolean
+	case `true` = 1953658213
+	case `false` = 1717660787
 	case date = 1818522656
 	case null = 1853189228 // typeNull
 	case applicationURL = 1634759276 // typeApplicationURL
@@ -59,6 +61,8 @@ public enum DescriptorType: UInt32, CustomStringConvertible {
 		case .list: return "list"
 		case .record: return "record"
 		case .boolean: return "boolean"
+		case .true: return "boolean (true)"
+		case .false: return "boolean (false)"
 		case .date: return "date"
 		case .null: return "null"
 		case .applicationURL: return "applicationURL"

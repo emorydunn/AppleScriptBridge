@@ -67,9 +67,12 @@ extension Bool: AppleEventDescriptorType {
 
 	public init?(from descriptor: NSAppleEventDescriptor) {
 		// Handle default `false`
-		guard Self.descriptorMatchesType(descriptor) else { return nil }
-
-		self = descriptor.booleanValue
+		switch descriptor.eventDescriptorType {
+		case .boolean, .true, .false:
+			self = descriptor.booleanValue
+		default:
+			return nil
+		}
 	}
 }
 
