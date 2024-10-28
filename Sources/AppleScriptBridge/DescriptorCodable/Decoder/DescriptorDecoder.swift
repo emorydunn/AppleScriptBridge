@@ -19,7 +19,7 @@ public class DescriptorDecoder {
 	///   - value: The type of the value to decode from the supplied Apple Event Descriptor.
 	///   - descriptor: The Apple Event Descriptor to decode.
 	/// - Returns: A value of the specified type, if the decoder can parse the data.
-	public func decode<T: Decodable>(_ value: T, from descriptor: NSAppleEventDescriptor) throws -> T {
+	public func decode<T: Decodable>(_ value: T.Type, from descriptor: NSAppleEventDescriptor) throws -> T {
 		let decoder = DescriptorDecoding(descriptor: descriptor)
 
 		return try T.init(from: decoder)
