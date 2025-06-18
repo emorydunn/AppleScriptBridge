@@ -86,10 +86,15 @@ extension Double: AppleEventDescriptorType {
 	}
 
 	public init?(from descriptor: NSAppleEventDescriptor) {
-		// Handle default `0.0`
-		guard Self.descriptorMatchesType(descriptor) else { return nil }
-
-		self = descriptor.doubleValue
+		// Handle default `0.0` or cast from Int
+		switch descriptor.eventDescriptorType {
+		case .double:
+			self = descriptor.doubleValue
+		case .int32:
+			self = Double(descriptor.int32Value)
+		default:
+			return nil
+		}
 	}
 }
 
@@ -128,10 +133,16 @@ extension Int: AppleEventDescriptorType {
 	/// - Parameter descriptor: The descriptor.
 	/// - Note: This will return a value of `0` even in the case when the event does not actually contain an integer value.
 	public init?(from descriptor: NSAppleEventDescriptor) {
-		// Handle default `0`
-		guard Self.descriptorMatchesType(descriptor) else { return nil }
-
-		self = Int(descriptor.int32Value)
+		// Handle default `0` or cast from double
+		// Handle default `0.0` or cast from Int
+		switch descriptor.eventDescriptorType {
+		case .int32:
+			self = Int(descriptor.int32Value)
+		case .double:
+		self = Int(descriptor.doubleValue)
+		default:
+			return nil
+		}
 	}
 }
 

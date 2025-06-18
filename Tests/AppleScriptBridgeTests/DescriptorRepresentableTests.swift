@@ -28,6 +28,15 @@ final class DescriptorRepresentableTests: XCTestCase {
 		XCTAssertEqual(Int(from: descriptor), value)
 		XCTAssertNil(Int(from: .null()))
 	}
+	
+	func testInt_CastFromDouble() {
+		let value = 42.0
+		let descriptor = NSAppleEventDescriptor(double: value)
+		
+		XCTAssertEqual(value.descriptor, descriptor)
+		XCTAssertEqual(Int(from: descriptor), Int(value))
+		XCTAssertNil(Int(from: .null()))
+	}
 
 	func testDouble() {
 		let value = 42.1
@@ -35,6 +44,15 @@ final class DescriptorRepresentableTests: XCTestCase {
 
 		XCTAssertEqual(value.descriptor, descriptor)
 		XCTAssertEqual(Double(from: descriptor), value)
+		XCTAssertNil(Double(from: .null()))
+	}
+	
+	func testDouble_CastFromInt() {
+		let value = 42
+		let descriptor = NSAppleEventDescriptor(int32: Int32(value))
+		
+		XCTAssertEqual(value.descriptor, descriptor)
+		XCTAssertEqual(Double(from: descriptor), Double(value))
 		XCTAssertNil(Double(from: .null()))
 	}
 
