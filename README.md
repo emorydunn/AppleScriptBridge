@@ -25,7 +25,7 @@ Conditional conformance is also added for types whose elements are descriptors:
 
 There are several initializers on `NSAppleEventDescriptor` which reduce boilerplate, mostly dealing with constructing lists.
 
-`NSAppleEventDescriptor.init(listDescriptor:)` handles initializing a list descriptor and adding each item in the array.
+`NSAppleEventDescriptor(listDescriptor:)` handles initializing a list descriptor and adding each item in the array.
 
 `NSAppleEventDescriptor.missingValue()` is also added in addition to `.null()`.
 
@@ -79,7 +79,7 @@ let result: Int = try script.executeThrowingOnNil(scriptHandler: "getRating")
 
 ## Codable
 
-While `AppleEventDescriptorRepresentable` is useful for converting simple types, it's still difficult to convert records into Swift types. This is where `Codable` support comes in. Structs and the most obvious, but even dictionaries require special handling and are best suited for `DescriptorEncoder` & `DescriptorDecoder`.
+While `AppleEventDescriptorRepresentable` is useful for converting simple types, it's still difficult to convert records into Swift types. This is where `Codable` support comes in. Structs are the most obvious, but even dictionaries require special handling and are best suited for `DescriptorEncoder` & `DescriptorDecoder`.
 
 ```swift
 let encoder = DescriptorEncoder()
